@@ -1,0 +1,124 @@
+# Start Kubernetes
+minikube start
+# Check status
+minikube status
+# Create Nginx deployment
+kubectl create deployment mynginx --image=nginx
+# Check Pods
+kubectl get pods
+# Check deployments
+kubectl get deployments
+# Expose Nginx
+kubectl expose deployment mynginx --type=NodePort --port=80 --target-port=80
+# Scale to 4 Pods
+kubectl scale deployment mynginx --replicas=4
+# Check service
+kubectl get services
+# Access Nginx
+kubectl port-forward svc/mynginx 8081:80
+
+nagios 
+# Download image
+docker pull jasonrivers/nagios:latest
+# Run Nagios
+docker run --name nagiosdemo -p 8888:80 jasonrivers/nagios:latest
+nagiosadmin
+nagios
+
+------------------------------- ------------------------------------------
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppassword
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  web:
+    image: nginx:latest
+    container_name: nginx_web
+    restart: always
+    ports:
+      - "8081:80"
+    networks:
+      - app-net
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+  redis:
+    image: redis:alpine
+    container_name: redis_cache
+    restart: always
+    networks:
+      - app-net
+
+networks:
+  app-net:
+
+volumes:
+  wordpress_data:
+  mysql_data:
+  db-data:
+-----------------------------------------------------
+
+
+
+ssh -i "from aws"
+sudo apt update
+sudo apt-get install docker.io
+sudo apt install git
+sudo apt install nano
+git clone https://github.com/NandhiVardhanReddy/maven-web-project.git
+ls
+cd maven-web-project
+ls
+
+sudo docker build -t dockername .
+sudo docker run -d --name mavenapp -p 8080:8080 dockername
+sudo docker images
+sudo docker ps
+sudo docker ps -a
+sudo docker logs mavenapp
+sudo docker stop mavenapp
+sudo docker rm mavenapp
+
+FROM tomcat:9.0-jdk11
+RUN rm -rf /usr/local/tomcat/webapps/*
+COPY target/maven_web-project.war /usr/local/tomcat/webapps/ROOT.war
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
